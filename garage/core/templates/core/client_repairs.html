@@ -1,0 +1,277 @@
+{% extends "core/base.html" %}
+
+{% block title %}Mes réparations - KODIARANA{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Mes réparations</p>
+        <h1>Suivi des interventions</h1>
+        <p>Retrouvez l'historique des réparations associées à votre compte et les pièces utilisées.</p>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+    <a href="{% url 'client_rendezvous' %}" class="btn btn-primary">📅 Demander un rendez-vous</a>
+</div>
+
+<div class="card">
+    {% if reparations %}
+    <div class="table-responsive">
+        <table class="client-repairs-table">
+            <thead>
+                <tr>
+                    <th>Moto</th>
+                    <th>Description</th>
+                    <th>Pièces</th>
+                    <th>Date RDV</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reparation in reparations %}
+                <tr class="repair-row">
+                    <td data-label="Moto">
+                        <strong>{{ reparation.moto.marque }} {{ reparation.moto.model }}</strong>
+                    </td>
+                    <td data-label="Description">
+                        {{ reparation.description|truncatechars:60|default:"Aucune description" }}
+                    </td>
+                    <td data-label="Pièces">
+                        {{ reparation.pieces.count }} pièce(s)
+                    </td>
+                    <td data-label="Date RDV">
+                        {{ reparation.date_rendezvous|date:"d/m/Y H:i"|default:"Non planifié" }}
+                    </td>
+                    <td data-label="Statut">
+                        <div class="repair-status">
+                            {% if reparation.statut == 'rendez_vous' %}
+                                <div class="status-badge status-rdv">📅 En attente RDV</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 10%; background: var(--accent);"></div>
+                                </div>
+                                <div class="status-info">En attente de validation par l'atelier</div>
+
+                            {% elif reparation.statut == 'en attente' and reparation.date_rendezvous %}
+                                {# ✅ RDV accepté par l'admin #}
+                                <div class="status-badge status-confirmed">✅ RDV confirmé</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 20%; background: var(--success);"></div>
+                                </div>
+                                <div class="status-info">
+                                    📅 {{ reparation.date_rendezvous|date:"l d F Y" }} à {{ reparation.date_rendezvous|date:"H\hi" }}<br>
+                                    🛎️ Présentez-vous à l’atelier avec votre moto.
+                                </div>
+
+                            {% elif reparation.statut == 'en attente' %}
+                                <div class="status-badge status-waiting">⏳ En attente</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 25%; background: var(--warning);"></div>
+                                </div>
+                                <div class="status-info">Votre demande a été enregistrée</div>
+
+                            {% elif reparation.statut == 'en cours' %}
+                                <div class="status-badge status-progress">🔧 En cours</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%; background: var(--accent);"></div>
+                                </div>
+                                <div class="status-info">Votre moto est prise en charge</div>
+
+                            {% elif reparation.statut == 'terminee' %}
+                                <div class="status-badge status-done">✅ Terminée</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%; background: var(--success);"></div>
+                                </div>
+                                <div class="status-info">Réparation terminée, veuillez contacter l'atelier</div>
+
+                            {% else %}
+                                <div class="status-badge">📋 {{ reparation.statut }}</div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- LÉGENDE DES STATUTS -->
+    <div class="status-legend" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="margin-bottom: 15px; color: white; font-size: 0.9rem;">📋 Légende des statuts :</h4>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div><span style="background: var(--accent); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> En attente RDV</div>
+            <div><span style="background: var(--warning); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> En attente de validation</div>
+            <div><span style="background: var(--success); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> RDV confirmé</div>
+            <div><span style="background: var(--accent); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> En cours de réparation</div>
+            <div><span style="background: var(--success); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> Terminée</div>
+        </div>
+    </div>
+
+    {% else %}
+    <div style="text-align: center; padding: 50px 20px;">
+        <p style="font-size: 3rem; margin-bottom: 15px;">🔧</p>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Aucune réparation n'a encore été enregistrée pour votre compte.</p>
+        <a href="{% url 'client_rendezvous' %}" class="btn btn-primary">📅 Demander un rendez-vous</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* TABLE RESPONSIVE */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .client-repairs-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+
+    .client-repairs-table th {
+        background: linear-gradient(135deg, rgba(255,214,0,0.15), rgba(255,214,0,0.08));
+        color: var(--accent) !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--accent);
+        padding: 14px 12px;
+        text-align: left;
+    }
+
+    .client-repairs-table td {
+        padding: 18px 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        vertical-align: top;
+    }
+
+    .client-repairs-table tr:hover {
+        background: rgba(255,214,0,0.05);
+    }
+
+    /* BADGES */
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .status-rdv {
+        background: rgba(255,214,0,0.2);
+        color: var(--accent);
+    }
+
+    .status-waiting {
+        background: rgba(245,158,11,0.2);
+        color: var(--warning);
+    }
+
+    .status-confirmed {
+        background: rgba(16,185,129,0.2);
+        color: #10b981;
+    }
+
+    .status-progress {
+        background: rgba(255,214,0,0.2);
+        color: var(--accent);
+    }
+
+    .status-done {
+        background: rgba(16,185,129,0.2);
+        color: var(--success);
+    }
+
+    /* PROGRESS BAR */
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 10px 0 8px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .status-info {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.5);
+        margin-top: 5px;
+        line-height: 1.4;
+    }
+
+    /* RESPONSIVE MOBILE */
+    @media (max-width: 768px) {
+        .client-repairs-table,
+        .client-repairs-table thead,
+        .client-repairs-table tbody,
+        .client-repairs-table tr,
+        .client-repairs-table td {
+            display: block;
+        }
+
+        .client-repairs-table thead tr {
+            display: none;
+        }
+
+        .client-repairs-table tr {
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .client-repairs-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .client-repairs-table td:last-child {
+            border-bottom: none;
+        }
+
+        .client-repairs-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent);
+            width: 40%;
+            font-size: 0.8rem;
+        }
+
+        .repair-status {
+            width: 55%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .client-repairs-table td {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .client-repairs-table td::before {
+            width: 100%;
+        }
+
+        .repair-status {
+            width: 100%;
+        }
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+
+{% block title %}Ajouter un paiement - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Paiements</p>
+        <h1>Ajouter un paiement pour réparation #{{ reparation.id }}</h1>
+    </div>
+</section>
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+            <h3 style="margin-bottom: 16px;">Résumé</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 4px;">Montant total</p>
+                    <p style="font-size: 1.5rem; color: white; font-weight: 700;">{{ reparation.montant_total }} Ar</p>
+                </div>
+                <div>
+                    <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 4px;">Déjà payé</p>
+                    <p style="font-size: 1.5rem; color: var(--accent); font-weight: 700;">{{ reparation.montant_paye }} Ar</p>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.12); padding-top: 16px; margin-top: 16px;">
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 4px;">Reste à payer</p>
+                <p style="font-size: 1.3rem; color: #ff6b6b; font-weight: 700;">{{ reparation.reste_a_payer }} Ar</p>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="montant">Montant du paiement (Ar) *</label>
+                <input type="number" id="montant" name="montant" step="1000" max="{{ reparation.reste_a_payer }}" required>
+                <small style="color: rgba(255,255,255,0.6);">Maximum : {{ reparation.reste_a_payer }} Ar</small>
+            </div>
+
+            <div class="form-group">
+                <label for="methode">Méthode de paiement *</label>
+                <select id="methode" name="methode" required>
+                    <option value="especes">Espèces</option>
+                    <option value="carte">Carte bancaire</option>
+                    <option value="virement">Virement bancaire</option>
+                    <option value="cheque">Chèque</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reference">Référence (optionnel)</label>
+                <input type="text" id="reference" name="reference" placeholder="Numéro de transaction, numéro de chèque, etc.">
+            </div>
+
+            <div style="display: flex; gap: 16px; margin-top: 30px;">
+                <button type="submit" class="btn btn-success" style="flex: 1;">Enregistrer le paiement</button>
+                <a href="{% url 'reparation_detail' reparation.id %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: white;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.form-group input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255,214,10,0.15);
+}
+</style>
+{% endblock %}

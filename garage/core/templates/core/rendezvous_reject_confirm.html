@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+
+{% block title %}Rejeter RDV #{{ reparation.id }} - KODIARANA{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Rendez-vous</p>
+        <h1>Rejeter le rendez-vous #{{ reparation.id }}</h1>
+    </div>
+</section>
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card" style="padding: 32px; text-align: center;">
+        <p style="font-size: 3rem; margin-bottom: 16px;">❌</p>
+        <h2 style="margin-bottom: 12px;">Confirmer le rejet</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 8px;">
+            Client : <strong>{{ reparation.moto.Client.nom }}</strong>
+        </p>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 8px;">
+            Moto : <strong>{{ reparation.moto.marque }} {{ reparation.moto.model }}</strong>
+        </p>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 24px;">
+            Date souhaitée : <strong>{{ reparation.date_rendezvous|date:"d/m/Y H:i"|default:"Non définie" }}</strong>
+        </p>
+        <p style="color: #ff6b6b; margin-bottom: 32px;">
+            ⚠️ Cette action est irréversible. Le rendez-vous sera définitivement supprimé.
+        </p>
+
+        <form method="POST" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" style="min-width: 180px;">
+                Confirmer le rejet
+            </button>
+            <a href="{% url 'rendezvous_list' %}" class="btn btn-secondary" style="min-width: 180px; text-align: center;">
+                Annuler
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

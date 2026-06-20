@@ -1,0 +1,77 @@
+{% extends "core/base.html" %}
+
+{% block title %}Votre avis - KODIARANA{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Témoignages</p>
+        <h1>Partagez votre expérience</h1>
+        <p>Votre avis sera examiné par notre équipe avant d'être publié sur la page d'accueil.</p>
+    </div>
+</section>
+
+<div style="max-width: 620px; margin: 0 auto;">
+    <div class="card">
+        <form method="POST" enctype="multipart/form-data" style="padding: 24px; display: grid; gap: 22px;">
+            {% csrf_token %}
+
+            <!-- Note en étoiles interactives -->
+            <div class="form-group">
+                <label>Note *</label>
+                <div class="star-rating-input">
+                    {% for i in "54321" %}
+                    <input type="radio" id="star{{ i }}" name="note" value="{{ i }}"
+                           {% if i == "5" %}checked{% endif %}>
+                    <label for="star{{ i }}" title="{{ i }} étoile{% if i != '1' %}s{% endif %}">★</label>
+                    {% endfor %}
+                </div>
+                <small style="color: rgba(255,255,255,0.5); font-size: 0.82rem;">
+                    Cliquez sur une étoile pour noter
+                </small>
+            </div>
+
+            <!-- Nom affiché -->
+            <div class="form-group">
+                <label for="auteur">Votre nom affiché *</label>
+                <input type="text" id="auteur" name="auteur"
+                       placeholder="Ex : Alain, propriétaire de moto"
+                       value="{{ user.get_full_name|default:user.username }}"
+                       required>
+            </div>
+
+            <!-- Texte du témoignage -->
+            <div class="form-group">
+                <label for="texte">Votre témoignage *</label>
+                <textarea id="texte" name="texte" rows="5" required
+                    placeholder="Partagez votre expérience avec KODIARANA GARAGE..."></textarea>
+            </div>
+
+            <!-- Photo optionnelle -->
+            <div class="form-group">
+                <label for="photo">Photo (optionnel)</label>
+                <input type="file" id="photo" name="photo" accept="image/*">
+                <small style="color: rgba(255,255,255,0.5); font-size: 0.82rem;">
+                    Une photo de vous ou de votre moto — JPG, PNG (max 5MB)
+                </small>
+            </div>
+
+            <!-- Info validation -->
+            <div class="temoignage-info-box">
+                <span>ℹ️</span>
+                <p>Votre témoignage sera visible sur la page d'accueil après validation par notre équipe.</p>
+            </div>
+
+            <div style="display: flex; gap: 16px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Envoyer mon avis
+                </button>
+                <a href="{% url 'accueil' %}" class="btn btn-secondary"
+                   style="flex: 1; text-align: center;">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

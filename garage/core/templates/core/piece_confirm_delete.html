@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}Supprimer Pièce - Garage Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Supprimer une pièce</h2>
+    </div>
+    <p>Voulez-vous vraiment supprimer la pièce <strong>{{ piece.nom }}</strong> ?</p>
+    <form method="POST" class="p-20">
+        {% csrf_token %}
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+            <a href="{% url 'piece_list' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

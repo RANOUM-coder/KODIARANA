@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+
+{% block title %}Ajouter un paiement - Garage Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Ajouter un paiement</h2>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <h3>Commande #{{ commande.id }} - {{ commande.client.nom }}</h3>
+        <p><strong>Total :</strong> {{ commande.montant_total }} Ar</p>
+        <p><strong>Déjà payé :</strong> {{ commande.montant_paye }} Ar</p>
+        <p><strong>Reste à payer :</strong> {{ commande.reste_a_payer }} Ar</p>
+    </div>
+    
+    <form method="POST" class="p-20">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="montant">Montant (Ar)</label>
+            <input type="number" id="montant" name="montant" step="0.01" max="{{ commande.reste_a_payer }}" required>
+        </div>
+        <div class="form-group">
+            <label for="methode">Méthode de paiement</label>
+            <select id="methode" name="methode" required>
+                <option value="especes">Espèces</option>
+                <option value="carte">Carte bancaire</option>
+                <option value="virement">Virement bancaire</option>
+                <option value="cheque">Chèque</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="reference">Référence (optionnel)</label>
+            <input type="text" id="reference" name="reference" placeholder="Numéro de chèque, référence virement...">
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success">Enregistrer le paiement</button>
+            <a href="{% url 'commande_detail' commande.id %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

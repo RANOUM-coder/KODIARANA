@@ -1,0 +1,72 @@
+{% extends "core/base.html" %}
+
+{% block title %}Mon profil - KODIARANA GARAGE{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Compte</p>
+        <h1>Mon profil</h1>
+        <p>Gérez vos informations personnelles et vos préférences.</p>
+    </div>
+</section>
+
+<div class="profile-grid">
+    <div class="profile-card profile-summary">
+        <div class="profile-avatar">
+            {% if photo_url %}
+                <img src="{{ photo_url }}" alt="Profil" class="profile-avatar-image">
+            {% else %}
+                <div class="profile-avatar-placeholder">👤</div>
+            {% endif %}
+        </div>
+        <h2 class="profile-name">{{ user.get_full_name|default:user.username }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        <div class="profile-meta">
+            <p class="profile-meta-label">Membre depuis:</p>
+            <p class="profile-meta-value">{{ user.date_joined|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+
+    <div>
+        <form method="POST" enctype="multipart/form-data" class="profile-card profile-form">
+            {% csrf_token %}
+            
+            <h3 class="profile-section-title">Informations personnelles</h3>
+            
+            <div class="profile-field">
+                <label class="profile-label">Nom complet</label>
+                <input type="text" value="{{ user.get_full_name|default:user.username }}" disabled class="profile-input profile-input-disabled">
+            </div>
+
+            <div class="profile-field">
+                <label class="profile-label">Email</label>
+                <input type="email" value="{{ user.email }}" disabled class="profile-input profile-input-disabled">
+            </div>
+
+            <div class="profile-field">
+                <label for="telephone" class="profile-label">Téléphone</label>
+                <input type="tel" id="telephone" name="telephone" value="{{ profil.telephone|default:'' }}" placeholder="+261 XX XX XX XX" class="profile-input">
+            </div>
+
+            <div class="profile-field">
+                <label for="adresse" class="profile-label">Adresse</label>
+                <input type="text" id="adresse" name="adresse" value="{{ profil.adresse|default:'' }}" placeholder="Votre adresse" class="profile-input">
+            </div>
+
+            <div class="profile-field">
+                <label for="bio" class="profile-label">Biographie</label>
+                <textarea id="bio" name="bio" placeholder="Parlez-nous un peu de vous..." class="profile-textarea">{{ profil.bio|default:'' }}</textarea>
+            </div>
+
+            <div class="profile-field">
+                <label for="photo_profil" class="profile-label">Photo de profil</label>
+                <input type="file" id="photo_profil" name="photo_profil" accept="image/*" class="profile-input profile-file-input">
+                <p class="profile-help-text">Formats acceptés: JPG, PNG (max 5MB)</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary profile-submit">Enregistrer les modifications</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

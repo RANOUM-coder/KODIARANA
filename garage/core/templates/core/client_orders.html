@@ -1,0 +1,195 @@
+{% extends "core/base.html" %}
+
+{% block title %}Mes commandes - KODIARANA{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="eyebrow">Mes commandes</p>
+        <h1>Suivi de vos commandes</h1>
+        <p>Consultez vos commandes récentes, le montant total et le statut de livraison.</p>
+    </div>
+</div>
+
+<div class="card">
+    {% if commandes %}
+    <div class="table-responsive">
+        <table class="client-orders-table">
+            <thead>
+                <tr>
+                    <th>N° Commande</th>
+                    <th>Date</th>
+                    <th>Montant total</th>
+                    <th>Paiement</th>
+                    <th>Statut livraison</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td data-label="N° Commande">#{{ commande.id }}</td>
+                    <td data-label="Date">{{ commande.date|date:"d/m/Y" }}</td>
+                    <td data-label="Montant total">{{ commande.montant_total|floatformat:0|slice:":-3" }} {{ commande.montant_total|floatformat:0|slice:"-3:" }} Ar</td>
+                    <td data-label="Paiement">
+                        <span class="statut-paiement statut-{{ commande.statut_paiement }}">
+                            {{ commande.get_statut_paiement_display }}
+                        </span>
+                    </td>
+                    <td data-label="Statut livraison">
+                        <div class="delivery-status">
+                            {% if commande.statut == 'en_attente' %}
+                                <div class="status-badge status-waiting">⏳ En attente</div>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 10%; background: var(--warning);"></div></div>
+                                <div class="status-info">Commande enregistrée, en attente de traitement</div>
+                                
+                            {% elif commande.statut == 'en_cours' %}
+                                <div class="status-badge status-progress">🚚 En cours de livraison</div>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 60%; background: var(--accent);"></div></div>
+                                <div class="status-info">Votre commande est en route</div>
+                                
+                            {% elif commande.statut == 'livree' %}
+                                <div class="status-badge status-done">✅ Livrée</div>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 100%; background: var(--success);"></div></div>
+                                <div class="status-info">Commande livrée avec succès</div>
+                                
+                            {% elif commande.statut == 'annulee' %}
+                                <div class="status-badge status-cancelled">❌ Annulée</div>
+                                <div class="progress-bar"><div class="progress-fill" style="width: 0%; background: var(--danger);"></div></div>
+                                <div class="status-info">Commande annulée</div>
+                                
+                            {% else %}
+                                <div class="status-badge">{{ commande.statut }}</div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- LÉGENDE -->
+    <div class="status-legend" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="margin-bottom: 15px; color: white; font-size: 0.9rem;">📦 Statuts de livraison :</h4>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div><span style="background: var(--warning); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> En attente</div>
+            <div><span style="background: var(--accent); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> En cours de livraison</div>
+            <div><span style="background: var(--success); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> Livrée</div>
+            <div><span style="background: var(--danger); display: inline-block; width: 12px; height: 12px; border-radius: 50%;"></span> Annulée</div>
+        </div>
+    </div>
+    
+    {% else %}
+    <div style="text-align: center; padding: 50px 20px;">
+        <p style="font-size: 3rem; margin-bottom: 15px;">📦</p>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Vous n'avez pas encore passé de commande.</p>
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-primary">🛒 Découvrir le catalogue</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Styles similaires à client_repairs */
+    .client-orders-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+    
+    .client-orders-table th {
+        text-align: left;
+        padding: 15px 12px;
+        background: rgba(255,255,255,0.05);
+        color: var(--accent);
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent);
+    }
+    
+    .client-orders-table td {
+        padding: 18px 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .client-orders-table tr:hover {
+        background: rgba(255,214,0,0.05);
+    }
+    
+    .delivery-status {
+        min-width: 180px;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    
+    .status-waiting { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .status-progress { background: rgba(255,214,0,0.2); color: var(--accent); }
+    .status-done { background: rgba(16,185,129,0.2); color: var(--success); }
+    .status-cancelled { background: rgba(239,68,68,0.2); color: var(--danger); }
+    
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 10px 0 8px;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+    
+    .status-info {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.5);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .client-orders-table, .client-orders-table thead, .client-orders-table tbody, 
+        .client-orders-table tr, .client-orders-table td {
+            display: block;
+        }
+        .client-orders-table thead tr { display: none; }
+        .client-orders-table tr {
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 15px;
+        }
+        .client-orders-table td {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .client-orders-table td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            color: var(--accent);
+            width: 40%;
+        }
+        .delivery-status { width: 55%; }
+    }
+</style>
+<style>
+    .client-orders-table th {
+        background: linear-gradient(135deg, rgba(255,214,0,0.15), rgba(255,214,0,0.08));
+        color: var(--accent) !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--accent);
+        padding: 14px 12px;
+    }
+</style>
+{% endblock %}

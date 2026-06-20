@@ -1,0 +1,240 @@
+{% extends "core/base.html" %}
+
+{% block title %}Gestion des témoignages - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Témoignages</p>
+        <h1>Gestion des témoignages</h1>
+        <p>Activez exactement 3 témoignages pour les afficher sur la page d'accueil. Les autres restent archivés.</p>
+    </div>
+    <a href="{% url 'accueil' %}" class="btn btn-secondary">👁 Voir l'accueil</a>
+</section>
+
+<!-- Compteur témoignages actifs -->
+<div class="temoignage-compteur fade-up">
+    <div class="compteur-bloc">
+        <span class="compteur-number">{{ actifs_count }}</span>
+        <span class="compteur-label">Actifs / 3</span>
+    </div>
+    <div class="compteur-barre">
+        <div class="compteur-fill" style="width: calc({{ actifs_count }} / 3 * 100%)"></div>
+    </div>
+    {% if actifs_count == 3 %}
+        <span class="compteur-status ok">✓ Quota atteint — l'accueil affiche 3 témoignages</span>
+    {% else %}
+        <span class="compteur-status warn">
+            Activez {{ 3|add:actifs_count|add:"-3" }} témoignage{{ 3|add:actifs_count|add:"-3"|pluralize }} supplémentaire{{ 3|add:actifs_count|add:"-3"|pluralize }} pour compléter l'accueil
+        </span>
+    {% endif %}
+</div>
+
+<!-- Témoignages en attente de validation -->
+{% if en_attente %}
+<div class="card" style="margin-bottom: 30px;">
+    <div class="card-header">
+        <h2>⏳ En attente de validation ({{ en_attente|length }})</h2>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Auteur</th>
+                <th>Note</th>
+                <th>Témoignage</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in en_attente %}
+            <tr>
+                <td>
+                    {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="{{ t.auteur }}"
+                             style="width:44px; height:44px; border-radius:50%; object-fit:cover;">
+                    {% else %}
+                        <div class="temoignage-avatar-small">{{ t.auteur|slice:":1"|upper }}</div>
+                    {% endif %}
+                </td>
+                <td><strong>{{ t.auteur }}</strong></td>
+                <td>
+                    <div class="stars-small">
+                        {% for i in "12345" %}
+                            <span class="{% if forloop.counter <= t.note %}star-on{% else %}star-off{% endif %}">★</span>
+                        {% endfor %}
+                    </div>
+                </td>
+                <td style="max-width: 280px; color: rgba(252, 245, 245, 0.75);">
+                    {{ t.texte|truncatechars:80 }}
+                </td>
+                <td>{{ t.date|date:"d/m/Y" }}</td>
+                <td>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <!-- Activer directement -->
+                        {% if actifs_count < 3 %}
+                        <form method="POST" action="{% url 'temoignage_activer' t.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success"
+                                    style="padding: 6px 12px; font-size: 0.82rem;">
+                                ✓ Valider & Activer
+                            </button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{% url 'temoignage_activer' t.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-secondary"
+                                    style="padding: 6px 12px; font-size: 0.82rem;"
+                                    title="Désactivez un témoignage actif d'abord">
+                                Valider (archivé)
+                            </button>
+                        </form>
+                        {% endif %}
+                        <!-- Supprimer -->
+                        <form method="POST" action="{% url 'temoignage_delete' t.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger"
+                                    style="padding: 6px 12px; font-size: 0.82rem;"
+                                    onclick="return confirm('Supprimer ce témoignage ?')">
+                                ✕ Refuser
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Témoignages actifs -->
+{% if actifs %}
+<div class="card" style="margin-bottom: 30px;">
+    <div class="card-header">
+        <h2>✅ Affichés sur l'accueil ({{ actifs|length }}/3)</h2>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Auteur</th>
+                <th>Note</th>
+                <th>Témoignage</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in actifs %}
+            <tr style="background: rgba(174, 163, 163, 0.05);">
+                <td>
+                    {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="{{ t.auteur }}"
+                             style="width:44px; height:44px; border-radius:50%; object-fit:cover;">
+                    {% else %}
+                        <div class="temoignage-avatar-small">{{ t.auteur|slice:":1"|upper }}</div>
+                    {% endif %}
+                </td>
+                <td><strong>{{ t.auteur }}</strong></td>
+                <td>
+                    <div class="stars-small">
+                        {% for i in "12345" %}
+                            <span class="{% if forloop.counter <= t.note %}star-on{% else %}star-off{% endif %}">★</span>
+                        {% endfor %}
+                    </div>
+                </td>
+                <td style="max-width: 280px; color: rgba(254, 238, 238, 0.75);">
+                    {{ t.texte|truncatechars:80 }}
+                </td>
+                <td>
+                    <form method="POST" action="{% url 'temoignage_desactiver' t.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary"
+                                style="padding: 6px 12px; font-size: 0.82rem;">
+                            ↓ Désactiver
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Témoignages archivés -->
+{% if archives %}
+<div class="card">
+    <div class="card-header">
+        <h2>📁 Archivés ({{ archives|length }})</h2>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Auteur</th>
+                <th>Note</th>
+                <th>Témoignage</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in archives %}
+            <tr>
+                <td>
+                    {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="{{ t.auteur }}"
+                             style="width:44px; height:44px; border-radius:50%; object-fit:cover;">
+                    {% else %}
+                        <div class="temoignage-avatar-small">{{ t.auteur|slice:":1"|upper }}</div>
+                    {% endif %}
+                </td>
+                <td>{{ t.auteur }}</td>
+                <td>
+                    <div class="stars-small">
+                        {% for i in "12345" %}
+                            <span class="{% if forloop.counter <= t.note %}star-on{% else %}star-off{% endif %}">★</span>
+                        {% endfor %}
+                    </div>
+                </td>
+                <td style="max-width: 280px; color: rgb(249, 240, 240);">
+                    {{ t.texte|truncatechars:80 }}
+                </td>
+                <td>{{ t.date|date:"d/m/Y" }}</td>
+                <td>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        {% if actifs_count < 3 %}
+                        <form method="POST" action="{% url 'temoignage_activer' t.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success"
+                                    style="padding: 6px 12px; font-size: 0.82rem;">
+                                ↑ Activer
+                            </button>
+                        </form>
+                        {% endif %}
+                        <form method="POST" action="{% url 'temoignage_delete' t.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger"
+                                    style="padding: 6px 12px; font-size: 0.82rem;"
+                                    onclick="return confirm('Supprimer définitivement ?')">
+                                ✕ Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if not en_attente and not actifs and not archives %}
+<div class="card" style="text-align: center; padding: 40px;">
+    <p style="color: rgb(243, 233, 233);">Aucun témoignage reçu pour l'instant.</p>
+</div>
+{% endif %}
+
+{% endblock %}

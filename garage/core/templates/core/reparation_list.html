@@ -1,0 +1,67 @@
+{% extends "core/base.html" %}
+
+{% block title %}Réparations - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Réparations</p>
+        <h1>Historique des réparations</h1>
+        <p>Suivez les interventions réalisées, les pièces utilisées et retrouvez rapidement les détails par moto et client.</p>
+    </div>
+    <a href="{% url 'reparation_add' %}" class="btn btn-primary">➕ Nouvelle réparation</a>
+</section>
+<div class="card">
+    <div class="card-header">
+        <h2>Liste des Réparations</h2>
+    </div>
+
+    {% if reparations %}
+    <div class="table-responsive table-wide">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Moto</th>
+                <th>Client</th>
+                <th>Description</th>
+                <th>Statut</th>
+                <th>Total</th>
+                <th>Paiement</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reparation in reparations %}
+            <tr>
+                <td>#{{ reparation.id }}</td>
+                <td>{{ reparation.moto.marque }} {{ reparation.moto.model }}</td>
+                <td>{{ reparation.moto.Client.nom }}</td>
+                <td>{{ reparation.description|truncatechars:40 }}</td>
+                <td>{{ reparation.statut }}</td>
+                <td>{{ reparation.montant_total }} Ar</td>
+                <td>
+                    <span class="statut-paiement statut-{{ reparation.statut_paiement }}">
+                        {{ reparation.get_statut_paiement_display }}
+                    </span>
+                </td>
+                <td>{{ reparation.date|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'reparation_detail' reparation.id %}" class="btn btn-icon btn-icon-view icon-view" title="Voir" aria-label="Voir la réparation #{{ reparation.id }}"></a>
+                        <a href="{% url 'reparation_edit' reparation.id %}" class="btn btn-icon btn-secondary icon-edit" title="Modifier" aria-label="Modifier la réparation #{{ reparation.id }}"></a>
+                        <a href="{% url 'reparation_delete' reparation.id %}" class="btn btn-icon btn-danger icon-delete" title="Supprimer" aria-label="Supprimer la réparation #{{ reparation.id }}"></a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p>Aucune réparation enregistrée.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

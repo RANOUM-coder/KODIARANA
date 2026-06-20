@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block title %}Confirmer suppression - Garage Management{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 60px auto; text-align: center;">
+    <div class="card" style="background: rgba(239,68,68,0.1); border: 2px solid rgba(239,68,68,0.3);">
+        <h2 style="color: #ff6b6b; margin-bottom: 20px;">⚠️ Confirmer la suppression</h2>
+        <p style="color: rgba(255,255,255,0.85); margin-bottom: 30px;">
+            Êtes-vous sûr de vouloir supprimer la réparation <strong>#{{ reparation.id }}</strong> ?
+            <br>
+            <small style="color: rgba(255,255,255,0.6); display: block; margin-top: 10px;">
+                Moto : {{ reparation.moto.marque }} {{ reparation.moto.model }}
+            </small>
+        </p>
+        
+        <form method="POST" style="display: flex; gap: 16px; justify-content: center;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" style="padding: 12px 32px;">Supprimer</button>
+            <a href="{% url 'reparation_list' %}" class="btn btn-secondary" style="padding: 12px 32px;">Annuler</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

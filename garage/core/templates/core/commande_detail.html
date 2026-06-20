@@ -1,0 +1,83 @@
+{% extends "core/base.html" %}
+
+{% block title %}Commande #{{ commande.id }} - Garage Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Commande #{{ commande.id }}</h2>
+        <div class="btn-group">
+            <a href="{% url 'commande_edit' commande.id %}" class="btn btn-secondary">Modifier</a>
+            <a href="{% url 'paiement_create' commande.id %}" class="btn btn-success">Ajouter un paiement</a>
+            <a href="{% url 'commande_list' %}" class="btn btn-secondary">Retour</a>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div>
+            <h3>Informations client</h3>
+            <p><strong>Nom :</strong> {{ commande.client.nom }}</p>
+            <p><strong>Téléphone :</strong> {{ commande.client.telephone }}</p>
+        </div>
+        <div>
+            <h3>Informations commande</h3>
+            <p><strong>Date :</strong> {{ commande.date|date:"d/m/Y H:i" }}</p>
+            <p><strong>Statut :</strong> {{ commande.statut }}</p>
+            <p><strong>Total :</strong> {{ commande.montant_total }} Ar</p>
+            <p><strong>Montant payé :</strong> {{ commande.montant_paye }} Ar</p>
+            <p><strong>Reste à payer :</strong> {{ commande.reste_a_payer }} Ar</p>
+            <p><strong>Statut paiement :</strong> 
+                <span class="statut-paiement statut-{{ commande.statut_paiement }}">
+                    {{ commande.get_statut_paiement_display }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <h3>Articles commandés</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Pièce</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ligne in lignes %}
+            <tr>
+                <td>{{ ligne.piece.nom }}</td>
+                <td>{{ ligne.piece.prix }} Ar</td>
+                <td>{{ ligne.quantite }}</td>
+                <td>{{ ligne.montant_total }} Ar</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if paiements %}
+    <h3>Paiements effectués</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Méthode</th>
+                <th>Référence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paiement in paiements %}
+            <tr>
+                <td>{{ paiement.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ paiement.montant }} Ar</td>
+                <td>{{ paiement.get_methode_display }}</td>
+                <td>{{ paiement.reference|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

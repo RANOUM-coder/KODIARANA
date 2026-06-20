@@ -1,0 +1,110 @@
+{% extends "core/base.html" %}
+
+{% block title %}{% if action == 'Créer' %}Nouvelle réparation{% else %}Modifier réparation{% endif %} - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Réparations</p>
+        <h1>{{ action }} une réparation</h1>
+    </div>
+</section>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="card">
+        <form method="POST" style="padding: 20px;">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="moto">Moto *</label>
+                <select id="moto" name="moto" required>
+                    <option value="">-- Sélectionner une moto --</option>
+                    {% for moto in motos %}
+                    <option value="{{ moto.id }}"
+                        {% if reparation and reparation.moto.id == moto.id %}selected{% endif %}>
+                        {{ moto.marque }} {{ moto.model }} ({{ moto.Client.nom }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" required
+                    placeholder="Ex : vidange, changement pneu, diagnostic freinage...">{{ reparation.description|default:'' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="statut">Statut</label>
+                <select id="statut" name="statut">
+                    <option value="en attente" {% if not reparation or reparation.statut == 'en attente' %}selected{% endif %}>En attente</option>
+                    <option value="en cours"   {% if reparation.statut == 'en cours' %}selected{% endif %}>En cours</option>
+                    <option value="terminee"   {% if reparation.statut == 'terminee' %}selected{% endif %}>Terminée</option>
+                </select>
+            </div>
+
+            <!-- ===== PIÈCES EN CHECKBOXES ===== -->
+            <div class="form-group">
+                <label>Pièces utilisées</label>
+                <p style="color: rgba(255,255,255,0.55); font-size: 0.85rem; margin-bottom: 12px;">
+                    Le montant total sera calculé automatiquement selon les pièces cochées.
+                </p>
+                <div class="pieces-checkbox-grid">
+                    {% for piece in pieces %}
+                    <label class="piece-checkbox-card {% if reparation and piece in reparation.pieces.all %}checked{% endif %}"
+                           for="piece_{{ piece.id }}">
+                        <input
+                            type="checkbox"
+                            id="piece_{{ piece.id }}"
+                            name="pieces"
+                            value="{{ piece.id }}"
+                            {% if reparation and piece in reparation.pieces.all %}checked{% endif %}
+                            onchange="this.closest('label').classList.toggle('checked', this.checked); recalculerTotal();">
+                        <div class="piece-checkbox-info">
+                            <span class="piece-checkbox-nom">{{ piece.nom }}</span>
+                            <span class="piece-checkbox-prix">{{ piece.prix|floatformat:0 }} Ar</span>
+                        </div>
+                        <span class="piece-checkbox-stock">Stock : {{ piece.stock }}</span>
+                    </label>
+                    {% empty %}
+                    <p style="color: rgba(255,255,255,0.5);">Aucune pièce disponible.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- ===== TOTAL CALCULÉ EN LIVE ===== -->
+            <div class="total-preview">
+                <span>Montant total estimé :</span>
+                <span id="total-display" class="total-montant">0 Ar</span>
+            </div>
+
+            <div style="display: flex; gap: 16px; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">{{ action }} la réparation</button>
+                <a href="{% url 'reparation_list' %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Annuler</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Prix des pièces injecté depuis Django
+const prixPieces = {
+    {% for piece in pieces %}
+    "{{ piece.id }}": {{ piece.prix }},
+    {% endfor %}
+};
+
+function recalculerTotal() {
+    const coches = document.querySelectorAll('input[name="pieces"]:checked');
+    let total = 0;
+    coches.forEach(cb => {
+        total += parseFloat(prixPieces[cb.value] || 0);
+    });
+    document.getElementById('total-display').textContent =
+        total.toLocaleString('fr-FR') + ' Ar';
+}
+
+// Calcul au chargement (mode édition — pièces déjà cochées)
+recalculerTotal();
+</script>
+{% endblock %}

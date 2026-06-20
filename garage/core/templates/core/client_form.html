@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+
+{% block title %}{{ action }} Client - Garage Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ action }} un client</h2>
+    </div>
+    <form method="POST" class="p-20">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" value="{{ client.nom|default_if_none:'' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input type="tel" id="telephone" name="telephone" value="{{ client.telephone|default_if_none:'' }}" required>
+        </div>
+        <div class="btn-group">
+            <button type="submit" class="btn btn-primary">{{ action }}</button>
+            <a href="{% url 'client_list' %}" class="btn btn-secondary">Retour</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

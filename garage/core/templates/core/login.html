@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+
+{% block title %}Connexion - KODIARANA{% endblock %}
+
+{% block content %}
+<div class="card auth-card">
+    <div class="card-header">
+        <h2>Connexion</h2>
+    </div>
+
+    <!-- ⚠️ AFFICHER LES MESSAGES (succès, erreurs, infos) -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" style="padding: 12px; border-radius: 8px; margin-bottom: 20px; 
+            {% if message.tags == 'success' %}background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid #10b981;
+            {% elif message.tags == 'error' %}background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid #ef4444;
+            {% else %}background: rgba(255,214,0,0.2); color: #ffd600; border: 1px solid #ffd600;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" class="form-card">
+        {% csrf_token %}
+
+        <!-- ⚠️ AFFICHER LES ERREURS GLOBALES (ex: mauvais mot de passe) -->
+        {% if form.non_field_errors %}
+        <div class="alert alert-error" style="padding: 12px; border-radius: 8px; margin-bottom: 20px; background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid #ef4444;">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="id_username">Email</label>
+            <input type="email" name="username" id="id_username" class="form-control" required>
+            {% if form.username.errors %}
+            <small style="color: #ef4444;">{{ form.username.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">Mot de passe</label>
+            <input type="password" name="password" id="id_password" class="form-control" required>
+            {% if form.password.errors %}
+            <small style="color: #ef4444;">{{ form.password.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+
+    <p style="margin-top: 18px; color: rgba(255,255,255,0.7);">
+        Pas encore inscrit ? <a href="{% url 'register' %}" style="color: var(--accent);">Créer un compte</a>
+    </p>
+</div>
+{% endblock %}

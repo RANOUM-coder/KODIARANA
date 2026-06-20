@@ -1,0 +1,51 @@
+{% extends "core/base.html" %}
+
+{% block title %}Motos - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Motos</p>
+        <h1>Inventaire des motos</h1>
+        <p>Retrouvez toutes les motos enregistrées, leurs clients associés et suivez facilement le parc de véhicules du garage.</p>
+    </div>
+    <a href="{% url 'moto_add' %}" class="btn btn-primary">➕ Ajouter une moto</a>
+</section>
+<div class="card">
+    <div class="card-header">
+        <h2>Liste des Motos</h2>
+    </div>
+    
+    {% if motos %}
+    <div class="table-responsive">
+    <table>
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Client</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for moto in motos %}
+            <tr>
+                <td>{{ moto.marque }}</td>
+                <td>{{ moto.model }}</td>
+                <td>{{ moto.Client.nom }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{% url 'moto_edit' moto.id %}" class="btn btn-icon btn-secondary icon-edit" title="Modifier" aria-label="Modifier {{ moto.marque }} {{ moto.model }}"></a>
+                        <a href="{% url 'moto_delete' moto.id %}" class="btn btn-icon btn-danger icon-delete" title="Supprimer" aria-label="Supprimer {{ moto.marque }} {{ moto.model }}"></a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p>Aucune moto enregistrée.</p>
+    {% endif %}
+</div>
+{% endblock %}

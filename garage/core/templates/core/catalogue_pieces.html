@@ -1,0 +1,360 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Catalogue de pièces - KODIARANA GARAGE{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Nos services</p>
+        <h1>Catalogue des pièces et accessoires</h1>
+        <p>Découvrez notre sélection complète de pièces détachées de qualité pour votre moto.</p>
+    </div>
+    <a href="{% url 'voir_panier' %}" class="btn btn-primary">🛒 Voir le panier</a>
+</section>
+
+<!-- ===== BARRE DE RECHERCHE EN DIRECT ===== -->
+<div class="search-section" style="margin-bottom: 30px;">
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+        <div style="flex: 2; min-width: 250px;">
+            <div style="position: relative;">
+                <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 1.2rem;">🔍</span>
+                <input type="text" 
+                       id="searchInput" 
+                       placeholder="Recherche en direct... (ex: pneu, frein, jante...)" 
+                       style="width: 100%; padding: 14px 15px 14px 45px; border-radius: 50px; border: 2px solid var(--accent); background: rgba(255,255,255,0.08); color: white; font-size: 1rem;">
+            </div>
+            <div style="margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.5);">
+                💡 Tapez directement - les résultats s'affichent instantanément
+            </div>
+        </div>
+        
+        <!-- Vue Grille/Liste -->
+        <div style="display: flex; gap: 10px;">
+            <button id="gridViewBtn" class="btn btn-primary" style="padding: 10px 20px;">📱 Grille</button>
+            <button id="listViewBtn" class="btn btn-secondary" style="padding: 10px 20px;">📄 Liste</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== CATÉGORIES (8 boutons) ===== -->
+<div class="categories-section" style="margin-bottom: 30px;">
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <button class="cat-btn active" data-cat="all">📦 Toutes</button>
+        <button class="cat-btn" data-cat="pneu">🛞 Pneus</button>
+        <button class="cat-btn" data-cat="frein">🛑 Freinage</button>
+        <button class="cat-btn" data-cat="suspension">🔧 Suspensions</button>
+        <button class="cat-btn" data-cat="jante">⚙️ Jantes & roues</button>
+        <button class="cat-btn" data-cat="electrique">🔋 Électrique</button>
+        <button class="cat-btn" data-cat="moteur">🔧 Moteur</button>
+        <button class="cat-btn" data-cat="transmission">⛓️ Transmission</button>
+        <button class="cat-btn" data-cat="carrosserie">🎨 Carrosserie</button>
+    </div>
+</div>
+
+<!-- ===== FILTRE PRIX ===== -->
+<div class="price-section" style="margin-bottom: 30px; background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px;">
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center; justify-content: center;">
+        <span style="color: var(--accent); font-weight: bold;">💰 Budget :</span>
+        <button class="price-btn" data-price="0-50000">Moins de 50 000 Ar</button>
+        <button class="price-btn" data-price="50000-100000">50 000 - 100 000 Ar</button>
+        <button class="price-btn" data-price="100000-200000">100 000 - 200 000 Ar</button>
+        <button class="price-btn" data-price="200000-9999999">Plus de 200 000 Ar</button>
+        <button class="price-btn active" data-price="all">Tous les prix</button>
+    </div>
+    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span>Min :</span>
+            <input type="number" id="priceMin" placeholder="0" style="width: 100px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span>Max :</span>
+            <input type="number" id="priceMax" placeholder="Illimité" style="width: 100px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;">
+        </div>
+        <button id="applyPriceBtn" class="btn btn-primary" style="padding: 8px 20px;">Appliquer</button>
+        <button id="resetPriceBtn" class="btn btn-secondary" style="padding: 8px 20px;">Réinitialiser</button>
+    </div>
+</div>
+
+<!-- ===== RÉSULTATS ===== -->
+<div style="margin-bottom: 20px;">
+    <p id="resultCount" style="color: rgba(255,255,255,0.7);">Chargement...</p>
+</div>
+
+<!-- ===== AFFICHAGE DES PRODUITS (GRILLE PAR DÉFAUT) ===== -->
+<div id="productsContainer" class="pieces-grid" style="display: grid; gap: 25px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+    {% for piece in pieces %}
+    <div class="piece-card product-item" 
+         data-id="{{ piece.id }}"
+         data-name="{{ piece.nom|lower }}"
+         data-price="{{ piece.prix }}"
+         data-cat="{{ piece.categorie }}">
+        <div style="position: relative;">
+            {% if piece.image %}
+                <img src="{{ piece.image.url }}" alt="{{ piece.nom }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 16px;">
+            {% else %}
+                <div style="width: 100%; height: 180px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16)); display: flex; align-items: center; justify-content: center; font-size: 3rem;">🔧</div>
+            {% endif %}
+            {% if piece.stock < 5 %}
+            <div style="position: absolute; top: 10px; left: 10px; background: var(--danger); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">🔥 Stock limité</div>
+            {% endif %}
+        </div>
+        <h3 style="color: white; margin: 15px 0 5px;">{{ piece.nom }}</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+            <span style="font-size: 1.3rem; color: var(--accent); font-weight: bold;">{{ piece.prix|floatformat:0|slice:":-3" }} {{ piece.prix|floatformat:0|slice:"-3:" }} Ar</span>
+            <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Stock: {{ piece.stock }}</span>
+        </div>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 5px 0;">{{ piece.description|truncatewords:10|default:"Aucune description" }}</p>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+            <a href="{% url 'piece_detail' piece.id %}" class="btn btn-secondary" style="flex: 1; text-align: center;">Voir détails</a>
+            <form method="POST" action="{% url 'ajouter_au_panier' piece.id %}" style="flex: 1;">
+                {% csrf_token %}
+                <input type="hidden" name="quantite" value="1">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">➕ Ajouter</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <p style="text-align: center; color: rgba(255,255,255,0.7);">Aucune pièce disponible pour le moment.</p>
+    {% endfor %}
+</div>
+
+<style>
+    .cat-btn, .price-btn {
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.05);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .cat-btn:hover, .price-btn:hover {
+        background: rgba(255,214,0,0.2);
+        border-color: var(--accent);
+    }
+    .cat-btn.active, .price-btn.active {
+        background: var(--accent);
+        color: #111;
+        border-color: var(--accent);
+    }
+    .product-item {
+        transition: all 0.3s ease;
+    }
+    .product-item.hidden {
+        display: none;
+    }
+    /* Vue liste */
+    .list-view {
+        display: flex;
+        flex-direction: column;
+    }
+    .list-view .product-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+        padding: 15px;
+    }
+    .list-view .product-item > div:first-child {
+        width: 100px;
+    }
+    .list-view .product-item > div:first-child img,
+    .list-view .product-item > div:first-child div {
+        width: 100px;
+        height: 100px;
+    }
+    .list-view .product-item h3 {
+        margin: 0;
+        min-width: 150px;
+    }
+    .list-view .product-item > div:nth-child(3) {
+        flex: 1;
+    }
+</style>
+
+<script>
+    // Données des produits depuis Django
+    const products = [
+        {% for piece in pieces %}
+        {
+            id: {{ piece.id }},
+            nom: "{{ piece.nom|escapejs }}",
+            prix: {{ piece.prix }},
+            stock: {{ piece.stock }},
+            image: "{% if piece.image %}{{ piece.image.url }}{% endif %}",
+            description: "{{ piece.description|escapejs|default:'Aucune description' }}",
+            url_detail: "{% url 'piece_detail' piece.id %}",
+            url_ajout: "{% url 'ajouter_au_panier' piece.id %}",
+            cat: "{{ piece.categorie }}"
+        },
+        {% endfor %}
+    ];
+
+    let currentView = 'grid';
+    let currentCategory = 'all';
+    let currentPriceMin = 0;
+    let currentPriceMax = Infinity;
+    let currentSearch = '';
+
+    // Fonction pour formater le prix avec espaces
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " Ar";
+    }
+
+    // Fonction pour afficher les produits
+    function filterAndDisplay() {
+        let filtered = products;
+
+        // Filtrer par recherche
+        if (currentSearch) {
+            filtered = filtered.filter(p => p.nom.toLowerCase().includes(currentSearch));
+        }
+
+        // Filtrer par catégorie
+        if (currentCategory !== 'all') {
+            filtered = filtered.filter(p => p.cat === currentCategory);
+        }
+
+        // Filtrer par prix
+        filtered = filtered.filter(p => p.prix >= currentPriceMin && p.prix <= currentPriceMax);
+
+        // Mettre à jour le compteur
+        document.getElementById('resultCount').innerHTML = `${filtered.length} produit(s) trouvé(s)`;
+
+        // Afficher les produits
+        const container = document.getElementById('productsContainer');
+        container.innerHTML = '';
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); grid-column: 1/-1;">Aucun produit ne correspond à votre recherche. Essayez d\'autres critères !</p>';
+            return;
+        }
+
+        filtered.forEach(p => {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'piece-card product-item';
+            
+            // Badge stock limité
+            const stockBadge = p.stock < 5 ? `<div style="position: absolute; top: 10px; left: 10px; background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">🔥 Stock limité</div>` : '';
+            
+            // Image
+            const imageHtml = p.image ? 
+                `<img src="${p.image}" alt="${p.nom}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 16px;">` :
+                `<div style="width: 100%; height: 180px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16)); display: flex; align-items: center; justify-content: center; font-size: 3rem;">🔧</div>`;
+            
+            productDiv.innerHTML = `
+                <div style="position: relative;">
+                    ${imageHtml}
+                    ${stockBadge}
+                </div>
+                <h3 style="color: white; margin: 15px 0 5px;">${p.nom}</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span style="font-size: 1.3rem; color: var(--accent); font-weight: bold;">${formatPrice(p.prix)}</span>
+                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Stock: ${p.stock}</span>
+                </div>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin: 5px 0;">${p.description.substring(0, 80)}${p.description.length > 80 ? '...' : ''}</p>
+                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                    <a href="${p.url_detail}" class="btn btn-secondary" style="flex: 1; text-align: center;">Voir détails</a>
+                    <form method="POST" action="${p.url_ajout}" style="flex: 1;">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <input type="hidden" name="quantite" value="1">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">➕ Ajouter</button>
+                    </form>
+                </div>
+            `;
+            container.appendChild(productDiv);
+        });
+    }
+
+    // Recherche en direct
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        currentSearch = this.value.toLowerCase().trim();
+        filterAndDisplay();
+    });
+
+    // Catégories
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentCategory = this.dataset.cat;
+            filterAndDisplay();
+        });
+    });
+
+    // Prix rapides
+    document.querySelectorAll('.price-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            const priceRange = this.dataset.price;
+            if (priceRange === 'all') {
+                currentPriceMin = 0;
+                currentPriceMax = Infinity;
+                document.getElementById('priceMin').value = '';
+                document.getElementById('priceMax').value = '';
+            } else {
+                const [min, max] = priceRange.split('-');
+                currentPriceMin = parseInt(min);
+                currentPriceMax = parseInt(max);
+                document.getElementById('priceMin').value = currentPriceMin;
+                document.getElementById('priceMax').value = currentPriceMax === 9999999 ? '' : currentPriceMax;
+            }
+            filterAndDisplay();
+        });
+    });
+
+    // Appliquer filtre personnalisé
+    document.getElementById('applyPriceBtn').addEventListener('click', function() {
+        const min = parseInt(document.getElementById('priceMin').value) || 0;
+        const max = parseInt(document.getElementById('priceMax').value) || Infinity;
+        currentPriceMin = min;
+        currentPriceMax = max;
+        // Désactiver les boutons rapides
+        document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+        filterAndDisplay();
+    });
+
+    // Réinitialiser
+    document.getElementById('resetPriceBtn').addEventListener('click', function() {
+        currentPriceMin = 0;
+        currentPriceMax = Infinity;
+        currentCategory = 'all';
+        currentSearch = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.cat-btn[data-cat="all"]').classList.add('active');
+        document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.price-btn[data-price="all"]').classList.add('active');
+        filterAndDisplay();
+    });
+
+    // Vue Grille/Liste
+    document.getElementById('gridViewBtn').addEventListener('click', function() {
+        currentView = 'grid';
+        document.getElementById('productsContainer').style.display = 'grid';
+        document.getElementById('productsContainer').style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
+        this.classList.add('btn-primary');
+        this.classList.remove('btn-secondary');
+        document.getElementById('listViewBtn').classList.add('btn-secondary');
+        document.getElementById('listViewBtn').classList.remove('btn-primary');
+    });
+
+    document.getElementById('listViewBtn').addEventListener('click', function() {
+        currentView = 'list';
+        document.getElementById('productsContainer').style.display = 'flex';
+        document.getElementById('productsContainer').style.flexDirection = 'column';
+        this.classList.add('btn-primary');
+        this.classList.remove('btn-secondary');
+        document.getElementById('gridViewBtn').classList.add('btn-secondary');
+        document.getElementById('gridViewBtn').classList.remove('btn-primary');
+    });
+
+    // Initialisation
+    filterAndDisplay();
+</script>
+{% endblock %}

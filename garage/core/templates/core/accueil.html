@@ -1,0 +1,352 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}KODIARANA GARAGE - Pièces moto, réparations et lavage à Madagascar{% endblock %}
+
+{% block content %}
+
+<!-- ===== SECTION 1 : HERO (Image de fond claire et nette) ===== -->
+<section class="hero-section fade-up" style="position: relative; border-radius: 30px; margin-bottom: 60px; overflow: hidden; min-height: 550px;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
+        <img src="{% static 'images/hero-moto.jpg' %}" 
+             alt="Garage KODIARANA" 
+             style="width: 100%; height: 100%; object-fit: cover; object-position: 70% center;">
+    </div>
+    <!-- Dégradé uniforme sur toute l'image (pas de zone claire) -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);"></div>
+    <div style="position: relative; z-index: 2; padding: 100px 50px; border-radius: 30px;">
+        <div style="max-width: 650px;">
+            <div class="offer-badge">
+                <span class="offer-badge-wheel"></span>
+                <span class="offer-badge-text">🔥 OFFRE SPÉCIALE : -20% sur votre première commande</span>
+                <div class="offer-badge-smoke">
+                    <span class="smoke-particle"></span>
+                    <span class="smoke-particle"></span>
+                    <span class="smoke-particle"></span>
+                    <span class="smoke-particle"></span>
+                    <span class="smoke-particle"></span>
+                </div>
+            </div>
+            <h1 style="font-size: clamp(2.2rem, 5vw, 3.8rem); margin-bottom: 20px; color: white; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+                Votre moto <span style="color: var(--accent);">mérite le meilleur</span>
+            </h1>
+            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.95); margin-bottom: 30px; max-width: 550px; text-shadow: 0 1px 5px rgba(0,0,0,0.3);">
+                Pièces détachées, réparations expertes, lavage express et livraison rapide à Antananarivo.
+            </p>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="{% url 'catalogue_pieces' %}" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.1rem;">🛒 Commander maintenant</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary" style="padding: 14px 32px; font-size: 1.1rem; background: rgba(0,0,0,0.6); color: white; border-color: rgba(255,255,255,0.3);">📝 Créer un compte</a>
+            </div>
+            <div style="margin-top: 30px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; gap: 4px;">
+                    {% for i in "12345" %}
+                    <span style="color: var(--accent); font-size: 1rem; text-shadow: 0 0 5px var(--accent);">★</span>
+                    {% endfor %}
+                </div>
+                <span style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">4.8/5 · <strong>+500 clients satisfaits</strong></span>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 2 : SERVICES (4 services) ===== -->
+<section class="services-section" style="margin-bottom: 60px;">
+    <div class="section-header fade-up" style="text-align: center; margin-bottom: 50px;">
+        <p class="eyebrow" style="color: var(--accent);">Nos services</p>
+        <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem);">Tout pour votre moto au meilleur prix</h2>
+        <div style="width: 80px; height: 3px; background: var(--accent); margin: 20px auto 0; border-radius: 3px;"></div>
+    </div>
+    
+    <div class="service-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+        
+        <!-- Service 1 : Réparations -->
+        <div class="service-card" style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 0 0 25px 0; text-align: center; transition: transform 0.3s; overflow: hidden;">
+            <div style="margin-bottom: 0; height: 200px; overflow: hidden;">
+                <img src="{% static 'images/service-reparation.jpg' %}" alt="Réparation moto" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+            </div>
+            <div style="padding: 20px 20px 0 20px;">
+                <h3 style="color: white; margin-bottom: 15px;">🔧 Réparations expert</h3>
+                <p style="color: rgba(255,255,255,0.75); margin-bottom: 20px;">Diagnostic précis, intervention rapide et garantie 30 jours.</p>
+                <div style="font-size: 1.2rem; color: var(--accent); font-weight: bold; margin-bottom: 20px;">À partir de 50 000 Ar</div>
+                <a href="{% url 'register' %}" class="btn btn-secondary" style="width: calc(100% - 40px); margin-bottom: 10px;">Je prends RDV</a>
+            </div>
+        </div>
+        
+        <!-- Service 2 : Pièces -->
+        <div class="service-card" style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 0 0 25px 0; text-align: center; transition: transform 0.3s; overflow: hidden;">
+            <div style="margin-bottom: 0; height: 200px; overflow: hidden;">
+                <img src="{% static 'images/service-piece.jpg' %}" alt="Pièces moto" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+            </div>
+            <div style="padding: 20px 20px 0 20px;">
+                <h3 style="color: white; margin-bottom: 15px;">🛞 Pièces d'origine</h3>
+                <p style="color: rgba(255,255,255,0.75); margin-bottom: 20px;">Stock permanent de pneus, plaquettes, chaînes et accessoires.</p>
+                <div style="font-size: 1.2rem; color: var(--accent); font-weight: bold; margin-bottom: 20px;">Prix imbattables</div>
+                <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="width: calc(100% - 40px); margin-bottom: 10px;">Voir le catalogue</a>
+            </div>
+        </div>
+        
+        <!-- Service 3 : Lavage -->
+        <div class="service-card" style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 0 0 25px 0; text-align: center; transition: transform 0.3s; overflow: hidden;">
+            <div style="margin-bottom: 0; height: 200px; overflow: hidden;">
+                <img src="{% static 'images/service-lavage.jpg' %}" alt="Lavage moto" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+            </div>
+            <div style="padding: 20px 20px 0 20px;">
+                <h3 style="color: white; margin-bottom: 15px;">🧼 Lavage express</h3>
+                <p style="color: rgba(255,255,255,0.75); margin-bottom: 20px;">Nettoyage complet, dégraissage chaîne et lustrage en 30 min.</p>
+                <div style="font-size: 1.2rem; color: var(--accent); font-weight: bold; margin-bottom: 20px;">10 000 Ar seulement</div>
+                <a href="{% url 'register' %}" class="btn btn-secondary" style="width: calc(100% - 40px); margin-bottom: 10px;">Réserver mon lavage</a>
+            </div>
+        </div>
+        
+        <!-- Service 4 : Livraison -->
+        <div class="service-card" style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 0 0 25px 0; text-align: center; transition: transform 0.3s; overflow: hidden;">
+            <div style="margin-bottom: 0; height: 200px; overflow: hidden;">
+                <img src="{% static 'images/service-livraison.jpg' %}" alt="Livraison" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s;">
+            </div>
+            <div style="padding: 20px 20px 0 20px;">
+                <h3 style="color: white; margin-bottom: 15px;">📦 Livraison sous 48h</h3>
+                <p style="color: rgba(255,255,255,0.75); margin-bottom: 20px;">Livraison à domicile ou au garage. Gratuite dès 100 000 Ar.</p>
+                <div style="font-size: 1.2rem; color: var(--accent); font-weight: bold; margin-bottom: 20px;">Gratuite dès 100k</div>
+                <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="width: calc(100% - 40px); margin-bottom: 10px;">Commander maintenant</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 3 : POURQUOI NOUS CHOISIR ===== -->
+<section class="advantages-section" style="margin-bottom: 60px; background: rgba(255,214,0,0.05); border-radius: 30px; padding: 50px 30px; border: 1px solid rgba(255,214,0,0.2);">
+    <div class="section-header fade-up" style="text-align: center; margin-bottom: 50px;">
+        <p class="eyebrow" style="color: var(--accent);">Pourquoi nous choisir</p>
+        <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem);">La confiance, ça se gagne</h2>
+        <div style="width: 80px; height: 3px; background: var(--accent); margin: 20px auto 0; border-radius: 3px;"></div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px;">
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">✅</div>
+            <h3 style="color: white; margin-bottom: 10px;">Garantie 30 jours</h3>
+            <p style="color: rgba(255,255,255,0.7);">Satisfait ou remboursé sur toutes nos prestations</p>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">🚚</div>
+            <h3 style="color: white; margin-bottom: 10px;">Livraison gratuite</h3>
+            <p style="color: rgba(255,255,255,0.7);">Dès 100 000 Ar d'achat, partout à Antananarivo</p>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">💳</div>
+            <h3 style="color: white; margin-bottom: 10px;">Paiement sécurisé</h3>
+            <p style="color: rgba(255,255,255,0.7);">CB, Orange Money, MVola ou espèces à la livraison</p>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">⭐</div>
+            <h3 style="color: white; margin-bottom: 10px;">SAV réactif</h3>
+            <p style="color: rgba(255,255,255,0.7);">Réponse à votre question sous 24h maximum</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 4 : PRODUITS POPULAIRES PAR CATÉGORIE ===== -->
+<section class="products-section" style="margin-bottom: 60px;">
+    <div class="section-header fade-up" style="text-align: center; margin-bottom: 50px;">
+        <p class="eyebrow" style="color: var(--accent);">Nos meilleures ventes</p>
+        <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem);">Découvrez nos catégories phares</h2>
+        <div style="width: 80px; height: 3px; background: var(--accent); margin: 20px auto 0; border-radius: 3px;"></div>
+    </div>
+    
+    <!-- Catégories rapides sur l'accueil -->
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px;">
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="padding: 10px 25px;">🛞 Tous les produits</a>
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="padding: 10px 25px;">🛞 Pneus</a>
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="padding: 10px 25px;">🛑 Freinage</a>
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="padding: 10px 25px;">🔧 Suspensions</a>
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-secondary" style="padding: 10px 25px;">⚙️ Jantes</a>
+    </div>
+    
+    <!-- Produits populaires (dynamique) -->
+    <div class="pieces-grid" style="display: grid; gap: 25px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+        {% for piece in pieces_populaires %}
+        <div class="piece-card" style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s;">
+            <div style="position: relative;">
+                {% if piece.image %}
+                    <img src="{{ piece.image.url }}" alt="{{ piece.nom }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 16px;">
+                {% else %}
+                    <div style="width: 100%; height: 180px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.16)); display: flex; align-items: center; justify-content: center; font-size: 3rem;">🔧</div>
+                {% endif %}
+                {% if piece.stock < 5 %}
+                <div style="position: absolute; top: 10px; left: 10px; background: var(--danger); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;">🔥 Stock limité</div>
+                {% endif %}
+            </div>
+            <h3 style="color: white; margin: 15px 0 5px;">{{ piece.nom }}</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                <span style="font-size: 1.3rem; color: var(--accent); font-weight: bold;">
+                    {{ piece.prix|floatformat:0|slice:":-3" }} {{ piece.prix|floatformat:0|slice:"-3:" }} Ar
+                </span>
+                <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Stock: {{ piece.stock }}</span>
+            </div>
+            <a href="{% url 'catalogue_pieces' %}" class="btn btn-primary" style="width: 100%; text-align: center; margin-top: 10px;">Découvrir</a>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'catalogue_pieces' %}" class="btn btn-primary" style="padding: 14px 40px; font-size: 1rem;">🛒 Voir tout le catalogue</a>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 5 : OFFRE BIENVENUE ===== -->
+{% comment %} <section class="offer-section" style="margin-bottom: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); border-radius: 20px; padding: 50px 40px; text-align: center;">
+    <h2 style="color: #111; font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 15px;">🎁 Nouveau client ?</h2>
+    <p style="color: #111; font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9;">Inscrivez-vous et bénéficiez de <strong>-5%</strong> sur votre première commande</p>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'register' %}" class="btn" style="background: #111; color: var(--accent); padding: 14px 32px; font-weight: bold;">📝 Je m'inscris maintenant</a>
+        <a href="{% url 'catalogue_pieces' %}" class="btn" style="background: rgba(0,0,0,0.2); color: #111; padding: 14px 32px; font-weight: bold;">🛒 Commander sans compte</a>
+    </div>
+</section> {% endcomment %}
+
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 6 : TÉMOIGNAGES ===== -->
+<section class="homepage-testimonials" id="temoignages" style="margin-bottom: 60px;">
+    <div class="section-header fade-up" style="text-align: center; margin-bottom: 50px;">
+        <p class="eyebrow" style="color: var(--accent);">Ils nous font confiance</p>
+        <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem);">Ce que nos clients disent</h2>
+        <div style="width: 80px; height: 3px; background: var(--accent); margin: 20px auto 0; border-radius: 3px;"></div>
+    </div>
+
+    <div class="testimonial-grid" style="display: grid; gap: 25px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+        {% if temoignages %}
+            {% for t in temoignages %}
+            <div class="testimonial-card" style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="testimonial-header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                    <div class="testimonial-photo">
+                        {% if t.photo %}
+                            <img src="{{ t.photo.url }}" alt="{{ t.auteur }}" class="testimonial-avatar" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                        {% else %}
+                            <div class="testimonial-avatar-placeholder" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,214,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: var(--accent); border: 2px solid var(--accent);">
+                                {{ t.auteur|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="testimonial-meta">
+                        <span class="testimonial-author" style="font-weight: bold; color: white; display: block;">{{ t.auteur }}</span>
+                        <div class="testimonial-stars" style="display: flex; gap: 3px; margin-top: 5px;">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= t.note %}
+                                    <span class="star star-on" style="color: var(--accent);">★</span>
+                                {% else %}
+                                    <span class="star star-off" style="color: rgba(255,255,255,0.2);">★</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-texte" style="color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic;">« {{ t.texte }} »</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="testimonial-card" style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px;">
+                <div class="testimonial-header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                    <div class="testimonial-avatar-placeholder" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,214,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: var(--accent); border: 2px solid var(--accent);">A</div>
+                    <div><span style="font-weight: bold; color: white; display: block;">Alain Rakoto</span>
+                    <div style="display: flex; gap: 3px; margin-top: 5px;"><span style="color: var(--accent);">★★★★★</span></div></div>
+                </div>
+                <p style="color: rgba(255,255,255,0.85);">« Service rapide, équipe professionnelle et pièces de qualité. Je recommande vivement KODIARANA ! »</p>
+            </div>
+            <div class="testimonial-card" style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px;">
+                <div class="testimonial-header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                    <div class="testimonial-avatar-placeholder" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,214,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: var(--accent); border: 2px solid var(--accent);">L</div>
+                    <div><span style="font-weight: bold; color: white; display: block;">Liva Andria</span>
+                    <div style="display: flex; gap: 3px; margin-top: 5px;"><span style="color: var(--accent);">★★★★☆</span></div></div>
+                </div>
+                <p style="color: rgba(255,255,255,0.85);">« Livraison rapide et prix compétitifs. Le lavage express est un vrai plus ! »</p>
+            </div>
+            <div class="testimonial-card" style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px;">
+                <div class="testimonial-header" style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                    <div class="testimonial-avatar-placeholder" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255,214,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; color: var(--accent); border: 2px solid var(--accent);">M</div>
+                    <div><span style="font-weight: bold; color: white; display: block;">Mamy Rajaona</span>
+                    <div style="display: flex; gap: 3px; margin-top: 5px;"><span style="color: var(--accent);">★★★★★</span></div></div>
+                </div>
+                <p style="color: rgba(255,255,255,0.85);">« Enfin un garage moderne à Tana ! Le suivi en ligne de mes réparations est génial. »</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- ===== BOUTONS ===== -->
+    <div class="testimonial-actions fade-up" style="text-align: center; margin-top: 40px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        
+        <!-- BOUTON VOIR TOUS LES AVIS (visible par TOUS) -->
+        <a href="{% url 'tous_temoignages' %}" class="btn btn-secondary" style="padding: 12px 28px;">
+            📖 Voir tous les avis ({{ temoignages_count }})
+        </a>
+        
+        <!-- BOUTON DONNER MON AVIS (change selon le rôle) -->
+        {% if user.is_authenticated and not user.is_staff %}
+            {# CLIENT CONNECTÉ (NON STAFF) - Accès direct au formulaire #}
+            <a href="{% url 'temoignage_create' %}" class="btn btn-primary" style="padding: 12px 28px;">✍️ Donner mon avis</a>
+            
+        {% elif user.is_authenticated and user.is_staff %}
+            {# ADMIN STAFF - Gérer les avis #}
+            <a href="{% url 'temoignage_list' %}" class="btn btn-primary" style="padding: 12px 28px;">👑 Gérer les avis</a>
+            
+        {% else %}
+            {# VISITEUR NON CONNECTÉ - Rediriger vers inscription #}
+            <a href="{% url 'register' %}" class="btn btn-primary" style="padding: 12px 28px;">✍️ Donner mon avis</a>
+        {% endif %}
+        
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 7 : CONTACT & HORAIRES ===== -->
+<section id="contact" class="contact-section" style="margin-bottom: 60px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <div style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border-radius: 20px; padding: 35px; border: 1px solid rgba(255,214,0,0.3); text-align: center;">
+            <div style="font-size: 3rem;">📅</div>
+            <h3 style="color: white; margin: 15px 0;">Prendre rendez-vous</h3>
+            <p style="color: rgba(255,255,255,0.75); margin-bottom: 25px;">Diagnostic, réparation ou lavage</p>
+            <a href="{% url 'register' %}" class="btn btn-primary" style="width: 100%;">📝 Réserver maintenant</a>
+        </div>
+        <div style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border-radius: 20px; padding: 35px; border: 1px solid rgba(255,214,0,0.3); text-align: center;">
+            <div style="font-size: 3rem;">📞</div>
+            <h3 style="color: white; margin: 15px 0;">Besoin d'aide ?</h3>
+            <p style="color: rgba(255,255,255,0.75); margin-bottom: 25px;">Une question ? Contactez-nous</p>
+            <a href="#" class="btn btn-secondary" style="width: 100%;">💬 Nous écrire</a>
+        </div>
+        <div style="background: linear-gradient(145deg, var(--surface), var(--surface-strong)); border-radius: 20px; padding: 35px; border: 1px solid rgba(255,214,0,0.3); text-align: center;">
+            <div style="font-size: 3rem;">⏰</div>
+            <h3 style="color: white; margin: 15px 0;">Nos horaires</h3>
+            <p style="color: rgba(255,255,255,0.75); line-height: 1.8;">Lundi - Samedi : 8h - 18h<br>Dimanche : Fermé</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE LUMINEUX LED ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 8 : NEWSLETTER ===== -->
+<section class="newsletter-section" style="margin-bottom: 60px; text-align: center;">
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="font-size: 2.5rem; margin-bottom: 15px;">📧</div>
+        <h2 style="color: white; margin-bottom: 15px;">Recevez nos offres exclusives</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 25px;">Inscrivez-vous à la newsletter et recevez -5% sur votre prochaine commande</p>
+        <form style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <input type="email" placeholder="Votre adresse email" style="flex: 1; min-width: 250px; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white;">
+            <button type="submit" class="btn btn-primary" style="padding: 14px 28px;">S'abonner</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

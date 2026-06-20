@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% block title %}Mes motos - KODIARANA{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Mes motos</p>
+        <h1>Mes motos enregistrées</h1>
+        <p>Gérez vos motos pour faciliter vos demandes de réparation et rendez-vous.</p>
+    </div>
+    <a href="{% url 'client_moto_add' %}" class="btn btn-primary">➕ Ajouter une moto</a>
+</section>
+
+<div class="card">
+    {% if motos %}
+    <table>
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for moto in motos %}
+            <tr>
+                <td>{{ moto.marque }}</td>
+                <td>{{ moto.model }}</td>
+                <td>
+                    <a href="{% url 'client_moto_delete' moto.id %}" 
+                       class="btn btn-danger" style="padding: 6px 12px; font-size: 0.85rem;">
+                        🗑️ Supprimer
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="padding: 24px; color: rgba(255,255,255,0.6);">
+        Vous n'avez pas encore enregistré de moto. 
+        <a href="{% url 'client_moto_add' %}">Ajouter votre première moto</a>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

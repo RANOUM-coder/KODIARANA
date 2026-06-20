@@ -1,0 +1,61 @@
+{% extends "core/base.html" %}
+
+{% block title %}Demandes de rendez-vous - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Rendez-vous</p>
+        <h1>Demandes de rendez-vous</h1>
+        <p>Liste des demandes de réparation en attente de validation par l'administrateur.</p>
+    </div>
+</section>
+
+<div class="card">
+    {% if rendezvous %}
+    <div class="table-responsive table-wide">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Moto</th>
+                <th>Demande</th>
+                <th>Téléphone</th>
+                <th>Rendez-vous</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reparation in rendezvous %}
+            <tr>
+                <td>#{{ reparation.id }}</td>
+                <td>{{ reparation.moto.Client.nom }}</td>
+                <td>{{ reparation.moto.marque }} {{ reparation.moto.model }}</td>
+                <td>{{ reparation.description|truncatechars:40 }}</td>
+                <td>{{ reparation.telephone|default:'-' }}</td>
+                <td>{{ reparation.date_rendezvous|date:"d/m/Y H:i"|default:'-' }}</td>
+                <td>
+                    <div class="action-buttons">
+                    <a href="{% url 'rendezvous_edit' reparation.id %}" 
+                        class="btn btn-icon btn-secondary icon-edit" title="Modifier" aria-label="Modifier le rendez-vous #{{ reparation.id }}">
+                    </a>
+                    <a href="{% url 'valider_rdv' reparation.id %}" 
+                        class="btn btn-icon btn-primary icon-check" title="Valider" aria-label="Valider le rendez-vous #{{ reparation.id }}"
+                        onclick="return confirm('Valider ce RDV et le convertir en réparation ?')">
+                    </a>
+                    <a href="{% url 'rejeter_rdv' reparation.id %}" 
+                        class="btn btn-icon btn-danger icon-reject" title="Rejeter" aria-label="Rejeter le rendez-vous #{{ reparation.id }}">
+                    </a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% else %}
+    <p>Aucune demande de rendez-vous en attente.</p>
+    {% endif %}
+</div>
+{% endblock %}

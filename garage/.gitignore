@@ -1,0 +1,42 @@
+# Environnement virtuel
+venv/
+env/
+ENV/
+
+# Fichiers Python temporaires
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyz
+
+# Base de données
+db.sqlite3
+*.sqlite3
+
+# Fichiers secrets
+.env
+.env.local
+.env.production
+
+# IDE et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Fichiers de migrations (optionnel, souvent gardés)
+# */migrations/
+# !*/migrations/__init__.py
+
+# Fichiers de médias (si tu as des images uploadées)
+media/
+staticfiles/

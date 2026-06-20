@@ -1,0 +1,181 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Nos services - KODIARANA GARAGE{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO SERVICES ===== -->
+<section class="page-header" style="background: linear-gradient(135deg, #1a1a1a, #0a0a0a); border: none; border-bottom: 4px solid var(--accent);">
+    <div style="text-align: center; width: 100%;">
+        <p class="eyebrow" style="color: var(--accent);">Nos prestations</p>
+        <h1 style="font-size: clamp(2rem, 4vw, 3.5rem);">Des services professionnels<br>pour votre moto</h1>
+        <p style="max-width: 700px; margin: 20px auto 0; color: rgba(255,255,255,0.8);">
+            KODIARANA vous accompagne dans l'entretien et la réparation de votre moto avec des techniciens experts et des équipements de dernière génération.
+        </p>
+    </div>
+</section>
+
+<!-- ===== SECTION 1 : RÉPARATIONS MOTO ===== -->
+<section style="margin-bottom: 80px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+        <div>
+            <img src="{% static 'images/service-reparation.jpg' %}" alt="Réparation moto" style="width: 100%; border-radius: 24px; border: 2px solid var(--accent);">
+        </div>
+        <div>
+            <div style="font-size: 3rem; margin-bottom: 15px;">🔧</div>
+            <h2 style="font-size: 2rem; margin-bottom: 20px; color: white;">Réparations expertes</h2>
+            <p style="color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: 20px;">
+                Notre équipe de mécaniciens expérimentés prend en charge toutes les marques et tous les types de pannes. 
+                Diagnostic précis, réparation rapide et garantie sur toutes nos interventions.
+            </p>
+            <ul style="list-style: none; margin-bottom: 30px;">
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Moteur & transmission</strong> - Révision complète</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Freinage & suspensions</strong> - Sécurité avant tout</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Électricité & électronique</strong> - Diagnostic informatique</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Échappement & carburation</strong> - Performance optimale</li>
+            </ul>
+            <div style="display: flex; gap: 15px;">
+                <span style="background: var(--accent); color: #111; padding: 8px 20px; border-radius: 30px; font-weight: bold;">À partir de 50 000 Ar</span>
+                <a href="{% url 'client_rendezvous' %}" class="btn btn-primary">Prendre rendez-vous</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 2 : PIÈCES D'ORIGINE ===== -->
+<section style="margin-bottom: 80px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; direction: rtl;">
+        <div style="direction: ltr;">
+            <img src="{% static 'images/service-piece.jpg' %}" alt="Pièces détachées" style="width: 100%; border-radius: 24px; border: 2px solid var(--accent);">
+        </div>
+        <div style="direction: ltr;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">🛞</div>
+            <h2 style="font-size: 2rem; margin-bottom: 20px; color: white;">Pièces d'origine & accessoires</h2>
+            <p style="color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: 20px;">
+                Un stock permanent de milliers de pièces pour toutes les marques. Pneus, plaquettes, chaînes, kits chaine, 
+                filtres, bougies, ampoules et accessoires personnalisés.
+            </p>
+            <ul style="list-style: none; margin-bottom: 30px;">
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Pneus toutes marques</strong> - Michelin, Bridgestone, Pirelli</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Plaquettes & disques de frein</strong> - Qualité premium</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Kits chaîne & pignons</strong> - Durabilité garantie</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Huiles & lubrifiants</strong> - Marques reconnues</li>
+            </ul>
+            <div style="display: flex; gap: 15px;">
+                <span style="background: var(--accent); color: #111; padding: 8px 20px; border-radius: 30px; font-weight: bold;">Stock permanent</span>
+                <a href="{% url 'catalogue_pieces' %}" class="btn btn-primary">Voir le catalogue</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 3 : LAVAGE EXPRESS ===== -->
+<section style="margin-bottom: 80px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+        <div>
+            <img src="{% static 'images/service-lavage.jpg' %}" alt="Lavage moto" style="width: 100%; border-radius: 24px; border: 2px solid var(--accent);">
+        </div>
+        <div>
+            <div style="font-size: 3rem; margin-bottom: 15px;">🧼</div>
+            <h2 style="font-size: 2rem; margin-bottom: 20px; color: white;">Lavage express & detailing</h2>
+            <p style="color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: 20px;">
+                Redonnez à votre moto son éclat d'origine. Notre service de lavage utilise des produits professionnels 
+                respectueux de votre carrosserie et de l'environnement.
+            </p>
+            <ul style="list-style: none; margin-bottom: 30px;">
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Lavage complet</strong> - Haute pression + mousse active</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Dégraissage chaîne</strong> - Nettoyage en profondeur</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Lustrage & cirage</strong> - Protection durable</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Traitement anti-rouille</strong> - Protection hivernale</li>
+            </ul>
+            <div style="display: flex; gap: 15px;">
+                <span style="background: var(--accent); color: #111; padding: 8px 20px; border-radius: 30px; font-weight: bold;">15 000 Ar seulement</span>
+                <a href="{% url 'client_rendezvous' %}" class="btn btn-primary">Réserver mon lavage</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 4 : LIVRAISON ===== -->
+<section style="margin-bottom: 80px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; direction: rtl;">
+        <div style="direction: ltr;">
+            <img src="{% static 'images/service-livraison.jpg' %}" alt="Livraison" style="width: 100%; border-radius: 24px; border: 2px solid var(--accent);">
+        </div>
+        <div style="direction: ltr;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">📦</div>
+            <h2 style="font-size: 2rem; margin-bottom: 20px; color: white;">Livraison rapide à domicile</h2>
+            <p style="color: rgba(255,255,255,0.85); line-height: 1.8; margin-bottom: 20px;">
+                Commandez vos pièces en ligne et recevez-les directement chez vous ou au garage de votre choix. 
+                Livraison express dans tout Antananarivo.
+            </p>
+            <ul style="list-style: none; margin-bottom: 30px;">
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Livraison sous 48h</strong> - Rapide et fiable</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Gratuite dès 100 000 Ar</strong> - Économisez</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Suivi en temps réel</strong> - Colis traçable</li>
+                <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 10px;">✅ <strong>Livraison le samedi</strong> - Flexibilité maximale</li>
+            </ul>
+            <div style="display: flex; gap: 15px;">
+                <span style="background: var(--accent); color: #111; padding: 8px 20px; border-radius: 30px; font-weight: bold;">Gratuite dès 100k Ar</span>
+                <a href="{% url 'catalogue_pieces' %}" class="btn btn-primary">Commander maintenant</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TIRET JAUNE ===== -->
+<div class="section-divider"><div class="led-divider"></div></div>
+
+<!-- ===== SECTION 5 : POURQUOI NOUS CHOISIR (AVANTAGES) ===== -->
+<section style="margin-bottom: 60px; background: rgba(255,214,0,0.05); border-radius: 30px; padding: 50px 30px; border: 1px solid rgba(255,214,0,0.2);">
+    <div style="text-align: center; margin-bottom: 50px;">
+        <p class="eyebrow" style="color: var(--accent);">Nos engagements</p>
+        <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem);">Pourquoi faire confiance à KODIARANA ?</h2>
+        <div style="width: 80px; height: 3px; background: var(--accent); margin: 20px auto 0; border-radius: 3px;"></div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">👨‍🔧</div>
+            <h3 style="color: white; margin-bottom: 10px;">Experts passionnés</h3>
+            <p style="color: rgba(255,255,255,0.7);">Des mécaniciens formés et expérimentés</p>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">🔧</div>
+            <h3 style="color: white; margin-bottom: 10px;">Équipement moderne</h3>
+            <p style="color: rgba(255,255,255,0.7);">Outillage de diagnostic dernière génération</p>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">💎</div>
+            <h3 style="color: white; margin-bottom: 10px;">Qualité garantie</h3>
+            <p style="color: rgba(255,255,255,0.7);">Pièces d'origine et garantie 30 jours</p>
+        </div>
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 2.5rem; margin-bottom: 15px;">⭐</div>
+            <h3 style="color: white; margin-bottom: 10px;">Service client</h3>
+            <p style="color: rgba(255,255,255,0.7);">Réponse sous 24h et suivi personnalisé</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section style="margin-bottom: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); border-radius: 20px; padding: 50px 40px; text-align: center;">
+    <h2 style="color: #111; font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 20px;">Prêt à prendre soin de votre moto ?</h2>
+    <p style="color: #111; margin-bottom: 30px; font-size: 1.1rem;">Prenez rendez-vous dès maintenant ou contactez-nous pour un devis gratuit</p>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'client_rendezvous' %}" class="btn" style="background: #111; color: var(--accent); padding: 14px 32px;">📅 Prendre rendez-vous</a>
+        <a href="{% url 'catalogue_pieces' %}" class="btn" style="background: rgba(0,0,0,0.2); color: #111; padding: 14px 32px;">🛒 Commander des pièces</a>
+    </div>
+</section>
+
+{% endblock %}

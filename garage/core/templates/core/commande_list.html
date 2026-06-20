@@ -1,0 +1,105 @@
+{% extends "core/base.html" %}
+
+{% block title %}Commandes - Garage Management{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Commandes</p>
+        <h1>Suivi des commandes</h1>
+        <p>Visualisez l'état des commandes en cours, les paiements et accédez rapidement aux détails.</p>
+    </div>
+    <a href="{% url 'commande_add' %}" class="btn btn-primary">➕ Nouvelle commande</a>
+</section>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Liste des Commandes</h2>
+    </div>
+    
+    {% if commandes %}
+    <div class="table-responsive">
+        <table class="admin-orders-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Statut livraison</th>
+                    <th>Total</th>
+                    <th>Paiement</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td>#{{ commande.id }}</td>
+                    <td>{{ commande.client.nom }}</td>
+                    <td>{{ commande.date|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <!-- AFFICHAGE DU STATUT AVEC COULEUR -->
+                        {% if commande.statut == 'en_attente' %}
+                            <span class="status-badge status-waiting">⏳ En attente</span>
+                        {% elif commande.statut == 'en_cours' %}
+                            <span class="status-badge status-progress">🚚 En cours de livraison</span>
+                        {% elif commande.statut == 'livree' %}
+                            <span class="status-badge status-done">✅ Livrée</span>
+                        {% elif commande.statut == 'annulee' %}
+                            <span class="status-badge status-cancelled">❌ Annulée</span>
+                        {% else %}
+                            <span class="status-badge">{{ commande.statut }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ commande.montant_total|floatformat:0|slice:":-3" }} {{ commande.montant_total|floatformat:0|slice:"-3:" }} Ar</td>
+                    <td>
+                        <span class="statut-paiement statut-{{ commande.statut_paiement }}">
+                            {{ commande.get_statut_paiement_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'commande_detail' commande.id %}" class="btn btn-icon btn-icon-view icon-view" title="Voir"></a>
+                            <a href="{% url 'commande_edit' commande.id %}" class="btn btn-icon btn-secondary icon-edit" title="Modifier"></a>
+                            <a href="{% url 'commande_delete' commande.id %}" class="btn btn-icon btn-danger icon-delete" title="Supprimer"></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Aucune commande enregistrée.</p>
+    {% endif %}
+</div>
+
+<style>
+    .admin-orders-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .admin-orders-table th {
+        text-align: left;
+        padding: 12px;
+        background: rgba(255,255,255,0.05);
+        color: var(--accent);
+    }
+    .admin-orders-table td {
+        padding: 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+    .status-waiting { background: rgba(245,158,11,0.2); color: var(--warning); }
+    .status-progress { background: rgba(255,214,0,0.2); color: var(--accent); }
+    .status-done { background: rgba(16,185,129,0.2); color: var(--success); }
+    .status-cancelled { background: rgba(239,68,68,0.2); color: var(--danger); }
+</style>
+
+{% endblock %}

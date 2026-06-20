@@ -1,0 +1,122 @@
+{% extends "core/base.html" %}
+
+{% block title %}Clients - Garage Management{% endblock %}
+
+{% block content %}
+
+<!-- ===== SECTION TEXTE + STATS SANS IMAGE ===== -->
+<section class="client-hero" style="padding: 20px 0;">
+    <div class="client-hero-copy" style="text-align: left; width: 100%;">
+
+        <p class="eyebrow">Espace clients</p>
+        <h1>Clients fidèles, suivi clair, relation rapide.</h1>
+        <p class="hero-text" style="max-width: 100%;">
+            Simplifiez la gestion des contacts, retrouvez l’historique de chaque client et accélérez les prises de rendez-vous.
+        </p>
+
+        <!-- ===== BARRE DE RECHERCHE ===== -->
+        <div class="hero-actions">
+            <form method="get" class="search-form" style="max-width: 100%;">
+                <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un client" class="search-input" />
+                <button type="submit" class="btn btn-secondary">Rechercher</button>
+            </form>
+        </div>
+
+        <!-- ===== STATISTIQUES UNIFORMISÉES ===== -->
+        <div class="client-hero-stats" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 30px; width: 100%; justify-content: flex-start;">
+            
+            <div class="stat-card hero-stat" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 16px; text-align: center; transition: 0.3s;">
+                <h3 style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👥 Total clients</h3>
+                <div class="number" style="font-size: 2.2rem; font-weight: 700; color: var(--accent);">{{ clients_count }}</div>
+            </div>
+
+            <div class="stat-card hero-stat" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 16px; text-align: center; transition: 0.3s;">
+                <h3 style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">🏍️ Total motos</h3>
+                <div class="number" style="font-size: 2.2rem; font-weight: 700; color: var(--accent);">{{ motos_count }}</div>
+            </div>
+
+            <div class="stat-card hero-stat" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 16px; text-align: center; transition: 0.3s;">
+                <h3 style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">📦 Total commandes</h3>
+                <div class="number" style="font-size: 2.2rem; font-weight: 700; color: var(--accent);">{{ commandes_count }}</div>
+            </div>
+
+            <div class="stat-card hero-stat" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 16px; text-align: center; border-left: 3px solid var(--accent); transition: 0.3s;">
+                <h3 style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">📅 RDV à valider</h3>
+                <div class="number" style="font-size: 2.2rem; font-weight: 700; color: var(--accent);">{{ rendezvous_a_valider }}</div>
+            </div>
+
+            <div class="stat-card hero-stat" style="flex: 1; min-width: 150px; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 20px 16px; text-align: center; border-left: 3px solid var(--warning); transition: 0.3s;">
+                <h3 style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">🔧 Réparations en cours</h3>
+                <div class="number" style="font-size: 2.2rem; font-weight: 700; color: var(--warning);">{{ reparations_en_cours }}</div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===== TABLEAU CLIENTS ===== -->
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Clients</p>
+        <h1>Gestion des clients</h1>
+        <p>Accédez rapidement à votre liste de clients, modifiez les informations et ajoutez des profils en un clic.</p>
+    </div>
+    <a href="{% url 'client_add' %}" class="btn btn-primary">➕ Ajouter un client</a>
+</section>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Liste des Clients</h2>
+    </div>
+
+    {% if clients %}
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.nom }}</td>
+                    <td>{{ client.telephone }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'client_edit' client.id %}" class="btn btn-icon btn-secondary icon-edit" title="Modifier" aria-label="Modifier {{ client.nom }}"></a>
+                            <a href="{% url 'client_delete' client.id %}" class="btn btn-icon btn-danger icon-delete" title="Supprimer" aria-label="Supprimer {{ client.nom }}"></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>Aucun client enregistré.</p>
+    {% endif %}
+</div>
+
+<!-- ===== RESPONSIVE ===== -->
+<style>
+    @media (max-width: 768px) {
+        .client-hero-stats {
+            flex-direction: column !important;
+        }
+        .stat-card {
+            width: 100% !important;
+            flex: none !important;
+        }
+        .search-form {
+            flex-direction: column;
+        }
+        .search-input {
+            width: 100% !important;
+        }
+    }
+</style>
+
+{% endblock %}

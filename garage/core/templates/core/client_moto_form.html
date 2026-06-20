@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% block title %}Ajouter une moto - KODIARANA{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Mes motos</p>
+        <h1>Ajouter une moto</h1>
+    </div>
+</section>
+
+<div style="max-width: 600px; margin: 0 auto;">
+    <div class="card">
+        <form method="POST" style="padding: 24px; gap: 18px; display: grid;">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="marque">Marque *</label>
+                <input type="text" id="marque" name="marque" 
+                       placeholder="Ex : Honda, Yamaha, Suzuki..." required>
+            </div>
+            <div class="form-group">
+                <label for="model">Modèle *</label>
+                <input type="text" id="model" name="model" 
+                       placeholder="Ex : CB500, MT-07, GSX-R..." required>
+            </div>
+            <div style="display: flex; gap: 16px; margin-top: 8px;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Enregistrer
+                </button>
+                <a href="{% url 'client_motos' %}" 
+                   class="btn btn-secondary" style="flex: 1; text-align: center;">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

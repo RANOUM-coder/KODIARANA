@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KODIARANA GARAGE{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+</head>
+<body>
+    <!-- ===== HEADER & NAVIGATION ===== -->
+    <header>
+        <div class="header-top">
+            <!-- ===== LOGO ===== -->
+            <div class="logo-bar">
+                <div class="logo">
+                    <span>K</span>
+                    <span class="logo-o" aria-label="O">O</span>
+                    <span>DIARANA</span>
+                </div>
+                <button class="burger-menu" id="burger-menu" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- ===== NAVIGATION PRINCIPALE ===== -->
+            <nav class="header-nav mobile-nav" id="mobile-nav">
+                
+                {% if user.is_authenticated %}
+                    {% comment %} -----------------------------------------------------
+                    NAVIGATION HO AN'NY ADMIN (MPITANTRA RAHA TOA KA STAFF)
+                    ----------------------------------------------------- {% endcomment %}
+                    {% if user.is_staff %}
+                        <a href="{% url 'accueil' %}" class="{% if active_page == 'accueil' %}active{% endif %}">Accueil</a>
+                        <a href="{% url 'client_list' %}" class="{% if active_page == 'clients' %}active{% endif %}">Clients</a>
+                        <a href="{% url 'moto_list' %}" class="{% if active_page == 'motos' %}active{% endif %}">Motos</a>
+                        <a href="{% url 'piece_list' %}" class="{% if active_page == 'pieces' %}active{% endif %}">Pièces</a>
+                        <a href="{% url 'commande_list' %}" class="{% if active_page == 'commandes' %}active{% endif %}">Commandes</a>
+                        <a href="{% url 'reparation_list' %}" class="{% if active_page == 'reparations' %}active{% endif %}">Réparations</a>
+                        <a href="{% url 'rendezvous_list' %}" class="{% if active_page == 'rendezvous' %}active{% endif %}">RDV</a>
+                    
+                    {% comment %} -----------------------------------------------------NAVIGATION HO AN'NY CLIENT EFA NISORATRA (TSY STAFF)----------------------------------------------------- {% endcomment %}
+                    {% else %}
+                        <a href="{% url 'client_portal' %}" class="{% if active_page == 'client_portal' %}active{% endif %}">Accueil</a>
+                        <a href="{% url 'a_propos' %}" class="{% if active_page == 'a_propos' %}active{% endif %}">À propos</a>
+                        <a href="{% url 'client_catalogue' %}" class="{% if active_page == 'client_catalogue' %}active{% endif %}">Catalogue</a>
+                        
+                        {# DROPDOWN MES SUIVIS #}
+                        <details class="nav-dropdown" {% if active_page == 'client_orders' or active_page == 'client_repairs' or active_page == 'client_rendezvous' %}open{% endif %}>
+                            <summary class="{% if active_page == 'client_orders' or active_page == 'client_repairs' or active_page == 'client_rendezvous' %}active{% endif %}">
+                                Mes suivis
+                                <span class="dropdown-arrow"></span>
+                            </summary>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'client_motos' %}" class="{% if active_page == 'client_motos' %}active{% endif %}">Mes motos</a>
+                                <a href="{% url 'client_orders' %}" class="{% if active_page == 'client_orders' %}active{% endif %}">Mes commandes</a>
+                                <a href="{% url 'client_repairs' %}" class="{% if active_page == 'client_repairs' %}active{% endif %}">Mes réparations</a>
+                                <a href="{% url 'client_rendezvous' %}" class="{% if active_page == 'client_rendezvous' %}active{% endif %}">Rendez-vous</a>
+                            </div>
+                        </details>
+                        
+                        <a href="{% url 'voir_panier' %}" class="{% if active_page == 'panier' %}active{% endif %}">
+                            🛒 Panier{% if panier_items_count %} <span class="cart-count">{{ panier_items_count }}</span>{% endif %}
+                        </a>
+                    {% endif %}
+                
+                {% comment %} -----------------------------------------------------
+                NAVIGATION HO AN'NY MPITSIDY (TSY MBOLA NISORATRA)
+                ----------------------------------------------------- {% endcomment %}
+                {% else %}
+                    <a href="{% url 'accueil' %}" class="{% if active_page == 'accueil' %}active{% endif %}">Accueil</a>
+                    <a href="{% url 'a_propos' %}" class="{% if active_page == 'a_propos' %}active{% endif %}">À propos</a>
+                    <a href="{% url 'services' %}" class="{% if active_page == 'services' %}active{% endif %}">Services</a>
+                    <a href="{% url 'catalogue_pieces' %}" class="{% if active_page == 'catalogue' %}active{% endif %}">Catalogue</a>
+                    <a href="{% url 'contact' %}" class="{% if active_page == 'contact' %}active{% endif %}">Contact</a>
+                {% endif %}
+            </nav>
+
+            <!-- ===== LIENS D'AUTHENTIFICATION ===== -->
+            <div class="auth-links">
+                {% if user.is_authenticated %}
+                    {# EFA NISORATRA #}
+                    <span class="user-greeting">{{ user.email|default:user.username }}</span>
+                    
+                    {% if not user.is_staff %}
+                        {# PROFIL CLIENT #}
+                        <a href="{% url 'profil_utilisateur' %}" class="profile-nav-link" aria-label="Profil">
+                            {% if profile_photo_url %}
+                                <img src="{{ profile_photo_url }}" alt="Photo de profil" class="profile-nav-image">
+                            {% else %}
+                                <span class="profile-nav-initial">{{ user.username|slice:":1"|upper }}</span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'logout' %}" class="btn btn-small btn-secondary">Déconnexion</a>
+                    
+                {% else %}
+                    {# TSY MBOLA NISORATRA #}
+                    <a href="{% url 'login' %}" class="auth-link">Connexion</a>
+                    <a href="{% url 'register' %}" class="btn btn-small btn-primary">Inscription</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+   <main>
+    <!-- ===== AFFICHAGE DES MESSAGES (succès, erreurs, alertes) ===== -->
+        {% if messages %}
+        <div style="max-width: 1200px; margin: 0 auto 20px auto; padding: 0 20px;">
+            {% for message in messages %}
+            <div class="message message-{{ message.tags }}" style="padding: 14px 20px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
+                {% if message.tags == 'success' %}background: rgba(16,185,129,0.15); color: #10b981; border-left: 4px solid #10b981;
+                {% elif message.tags == 'error' %}background: rgba(239,68,68,0.15); color: #ef4444; border-left: 4px solid #ef4444;
+                {% elif message.tags == 'warning' %}background: rgba(245,158,11,0.15); color: #f59e0b; border-left: 4px solid #f59e0b;
+                {% else %}background: rgba(255,214,0,0.1); color: var(--accent); border-left: 4px solid var(--accent);{% endif %}">
+                <span style="font-size: 1.2rem;">
+                    {% if message.tags == 'success' %}✅
+                    {% elif message.tags == 'error' %}❌
+                    {% elif message.tags == 'warning' %}⚠️
+                    {% else %}ℹ️{% endif %}
+                </span>
+                <span style="flex: 1;">{{ message }}</span>
+                <button onclick="this.parentElement.style.display='none'" style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.1rem;">✕</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- ===== CONTENU PRINCIPAL ===== -->
+        {% block content %}
+        <!-- IREO HTML AMON'NY PAGE REHETRA DIA MITSOFOKA ETO -->
+        {% endblock %}
+    </main>
+
+    <!-- ===== FOOTER VAOVAO SY LALINA ===== -->
+    <footer class="main-footer">
+    <div class="footer-container">
+        <!-- COLONNE 1 : LIENS RAPIDES -->
+        <div class="footer-col">
+            <h4>Liens rapides</h4>
+            <ul class="footer-links">
+                <li><a href="{% url 'accueil' %}">Accueil</a></li>
+                <li><a href="{% url 'a_propos' %}">À propos</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="{% url 'catalogue_pieces' %}">Catalogue</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+
+        <!-- COLONNE 2 : NOS SERVICES -->
+        <div class="footer-col">
+            <h4>Nos services</h4>
+            <ul class="footer-links">
+                <li><a href="#">🔧 Réparations moto</a></li>
+                <li><a href="{% url 'catalogue_pieces' %}">🛞 Pièces d'origine</a></li>
+                <li><a href="#">🧼 Lavage express</a></li>
+                <li><a href="#">📦 Livraison sous 48h</a></li>
+                <li><a href="#">🔍 Diagnostic gratuit</a></li>
+            </ul>
+        </div>
+
+        <!-- COLONNE 3 : CONTACT -->
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <ul class="footer-contact">
+                <li>📍 Antananarivo, Madagascar</li>
+                <li>📞 033 67 612 34</li>
+                <li>✉️ contact@kodiarana.mg</li>
+            </ul>
+        </div>
+
+        <!-- COLONNE 4 : HORAIRES -->
+        <div class="footer-col">
+            <h4>Horaires</h4>
+            <ul class="footer-contact">
+                <li>Lundi - Samedi : 8h - 18h</li>
+                <li>Dimanche : Fermé</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- BAS DE FOOTER -->
+    <div class="footer-bottom">
+        <p>&copy; 2026 KODIARANA GARAGE. Tous droits réservés.</p>
+        <div class="footer-bottom-links">
+            <a href="#">Mentions légales</a>
+            <a href="#">CGV</a>
+            <a href="#">Politique de confidentialité</a>
+        </div>
+    </div>
+</footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="{% static 'JS/script.js' %}"></script>
+</body>
+</html>
